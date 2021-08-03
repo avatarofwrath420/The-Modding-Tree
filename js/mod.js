@@ -43,6 +43,8 @@ function getPointGen() {
 		return new Decimal(0)
 	let gain = new Decimal(1)
 	if (hasUpgrade('Celestial Particles', 11)) {gain = gain.times(upgradeEffect('Celestial Particles', 11))}
+	if (hasUpgrade('Celestial Particles', 12)) {gain = gain.times(upgradeEffect('Celestial Particles', 12))}
+
 
 	return gain
 }

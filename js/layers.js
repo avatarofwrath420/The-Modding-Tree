@@ -29,11 +29,20 @@ addLayer("Celestial Particles", {
         11: {
             name: "Quantum Input",
             description: "Celestial Essence gain is multiplied based on Celestial Particles.",
-            cost: new Decimal(1),
+            cost: new Decimal(3),
             effect() {
                 return player[this.layer].points.add(1).pow(0.5)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
-        }
+        }, 
+        12: {
+            name: "Chain Reaction",
+            description: "Celestial particle gain is multiplied based on Celestial Essence.",
+            cost: new Decimal(10),
+            effect() {
+                return player.points.add(1).pow(0.25)
+            },
+            effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
+        },
     }
 })
