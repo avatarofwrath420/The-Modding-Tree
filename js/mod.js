@@ -1,14 +1,14 @@
 let modInfo = {
-	name: "The ??? Tree",
-	id: "mymod",
-	author: "nobody",
-	pointsName: "points",
+	name: "Apotheosis Incremental",
+	id: "apotheosis",
+	author: "Avatar Of Wrath and System Shark",
+	pointsName: "Celestial Essence",
 	modFiles: ["layers.js", "tree.js"],
 
-	discordName: "",
+	discordName: "", 
 	discordLink: "",
 	initialStartPoints: new Decimal (10), // Used for hard resets and new players
-	offlineLimit: 1,  // In hours
+	offlineLimit: 24,  // In hours
 }
 
 // Set your version in num and name
@@ -41,8 +41,9 @@ function canGenPoints(){
 function getPointGen() {
 	if(!canGenPoints())
 		return new Decimal(0)
-
 	let gain = new Decimal(1)
+	if (hasUpgrade('Celestial Particles', 11)) {gain = gain.times(upgradeEffect('Celestial Particles', 11))}
+
 	return gain
 }
 
