@@ -40,9 +40,35 @@ addLayer("Celestial Particles", {
             description: "Celestial particle gain is multiplied based on Celestial Essence.",
             cost: new Decimal(10),
             effect() {
-                return player.points.add(1).pow(0.25)
+                return player.points.plus(1).pow(0.25)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
         },
+        13: {
+            name: "Extended Particle Cycles",
+            description: "Unlocks Particle Cycle Extenders. You get one for free :)",
+            cost: new Decimal(50),
+            effect() {
+                setBuyableAmount(this.layer, 11, 1);
+            },
+            effectDisplay() { return "Extra cycle extensions each add " + format(upgradeEffect(this.layer, this.id))+"x multiplier" }, // Add formatting to the effect
+        }
+    },
+    buyables: {
+        11: {
+            cost(x) { return new Decimal(50).mul(Decimal.ceil(new Decimal(2).pow(x))) },
+            display() { return "Add Particle Cycle Extension. Costs :" + this.cost(getBuyableAmount(this.layer, this.id))},
+            canAfford() { return player[this.layer].points.gte(this.cost(getBuyableAmount(this.layer, this.id))) },
+            buy() {
+                player[this.layer].points = player[this.layer].points.sub(this.cost(getBuyableAmount(this.layer, this.id)))
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            effect() {
+                return new Decimal(2).pow(getBuyableAmount(this.layer, this.id));
+            },
+            unlocked() { return hasUpgrade('Celestial Particles', 13) },  
+            purchaseLimit: 10
+        }
     }
+    
 })
