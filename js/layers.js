@@ -49,7 +49,7 @@ addLayer("Celestial Particles", {
             description: "Unlocks Particle Cycle Extenders. You get one for free :)",
             cost: new Decimal(50),
             effect() {
-                setBuyableAmount(this.layer, 11, 1);
+                setBuyableAmount(this.layer, 11, new Decimal(1));
             },
             effectDisplay() { return "Extra cycle extensions each add " + format(upgradeEffect(this.layer, this.id))+"x multiplier" }, // Add formatting to the effect
         }
@@ -67,7 +67,7 @@ addLayer("Celestial Particles", {
                 return new Decimal(2).pow(getBuyableAmount(this.layer, this.id));
             },
             unlocked() { return hasUpgrade('Celestial Particles', 13) },  
-            purchaseLimit: 10
+            purchaseLimit: new Decimal(10)
         }
     }
     
