@@ -27,39 +27,76 @@ addLayer("Celestial Particles", {
     layerShown(){return true},
     upgrades: {
         11: {
-            name: "Quantum Input",
+            title: "Quantum Input",
             description: "Celestial Essence gain is multiplied based on Celestial Particles.",
-            cost: new Decimal(3),
+            cost: new Decimal(2),
             effect() {
-                return player[this.layer].points.add(1).pow(0.5)
+                return player[this.layer].points.add(new Decimal(1)).pow(new Decimal(0.5))
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
         }, 
         12: {
-            name: "Chain Reaction",
+            title: "Chain Reaction",
             description: "Celestial particle gain is multiplied based on Celestial Essence.",
-            cost: new Decimal(10),
+            cost: new Decimal(6),
             effect() {
-                return player.points.plus(1).pow(0.25)
+                if (hasUpgrade(this.layer, 15)) {
+                    return player.points.plus(1).log(3).plus(1);
+                } else if (hasUpgrade(this.layer, 14)) {
+                    return player.points.plus(1).log(4).plus(1);
+                } else {
+                    return player.points.plus(1).log(5).plus(1);
+                }
             },
-            effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
+            effectDisplay() {
+                return format(upgradeEffect(this.layer, this.id))+"x";
+            }, // Add formatting to the effect
         },
         13: {
-            name: "Extended Particle Cycles",
+            title: "Extended Particle Cycles",
             description: "Unlocks Particle Cycle Extenders. You get one for free :)",
-            cost: new Decimal(50),
+            cost: new Decimal(25),
             effect() {
                 if (getBuyableAmount(this.layer, 11).lte(new Decimal(0))) {
                     setBuyableAmount(this.layer, 11, new Decimal(1));
                 }
             },
-            effectDisplay() { return "Extra cycle extensions each add " + format(upgradeEffect(this.layer, this.id))+"x multiplier" }, // Add formatting to the effect
+            effectDisplay() { 
+                return "Extra cycle extensions each add " + format(buyableEffect(this.layer, 11)) + "x multiplier" 
+            }, // Add formatting to the effect
+        },
+        14: {
+            title: "Violent Reaction",
+            description: "Chain Reaction formula is now a lot more potent.",
+            cost: new Decimal(500),
+            effect() {
+                
+            }
+        },
+        15: {
+            title: "Rediculous Reaction",
+            description: "Chain Reaction formula is now EVEN MORE potent.",
+            cost: new Decimal(2500),
+            effect() {
+                
+            }
+        } /*,
+        21: {
+            name: "Expanding Entries",
+            description: "Cycle Extensions are cheaper",
+            cost: new Decimal(2000),
+            effect() {
+               
+                
+            },
+            effectDisplay() { return "Extra cycle extensions each add " + format(buyableEffect(this.layer, 11))+"x multiplier" }, // Add formatting to the effect
         }
+        */
     },
     buyables: {
         11: {
-            cost(x) { return new Decimal(25).mul(Decimal.floor(new Decimal(3).pow(Decimal.floor(x.pow(1.25))))) },
-            display() { return "Add Particle Cycle Extension. Costs : " + this.cost(getBuyableAmount(this.layer, this.id))},
+            cost(x) { return Decimal.floor(new Decimal(25).mul((new Decimal(2).pow((x))))) },
+            display() { return "Add Particle Cycle Extension. Costs : " + this.cost(getBuyableAmount(this.layer, this.id)) + ` \n You currently have ` + getBuyableAmount(this.layer, 11) + ` Cycle Extensions`},
             canAfford() { return player[this.layer].points.gte(this.cost(getBuyableAmount(this.layer, this.id))) },
             buy() {
                 player[this.layer].points = player[this.layer].points.sub(this.cost(getBuyableAmount(this.layer, this.id)))
@@ -68,7 +105,6 @@ addLayer("Celestial Particles", {
             effect() {
                 return new Decimal(2).pow(getBuyableAmount(this.layer, this.id));
             },
-            tooltip: "beep",
             unlocked() { return hasUpgrade('Celestial Particles', 13) },  
             purchaseLimit: new Decimal(10)
         }
