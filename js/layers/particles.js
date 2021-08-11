@@ -80,7 +80,9 @@ addLayer("Celestial Particles", {
             effect() {
                 
             }
-        } /*,
+        }
+        
+        /*,
         21: {
             name: "Expanding Entries",
             description: "Cycle Extensions are cheaper",
