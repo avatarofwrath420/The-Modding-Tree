@@ -114,16 +114,15 @@ addLayer("Celestial Particles", {
             }
         },
         23: {
-            title: "Dimensional Seperators",
-            description: "Unlocks Dimensional Seperators which could increase the number of buyable Cycle Extensions. You get one for free :)",
+            title: "Larger Cycles",
+            description: "A buyable that allows for more complex seperators which increase the amount of buyable particles. You get one for free :)",
             cost: new Decimal(20000),
             effect() {
-                if (getBuyableAmount(this.layer, 12).lte(new Decimal(0))) {
-                    setBuyableAmount(this.layer, 12, new Decimal(1));
+                if (getBuyableAmount(this.layer, 22).lte(new Decimal(0))) {
+                    setBuyableAmount(this.layer, 22, new Decimal(1));
                 }
             }
-        },
-    
+        }
     },
     buyables: {
         11: {
@@ -139,7 +138,7 @@ addLayer("Celestial Particles", {
                 return new Decimal(new Decimal(2).add(new Decimal(0.1).mul(getBuyableAmount(this.layer, 12)))).pow(getBuyableAmount(this.layer, this.id));
             },
             unlocked() { return hasUpgrade('Celestial Particles', 13) },  
-            purchaseLimit: new Decimal(10).add(getBuyableAmount(22).mul(2))
+            purchaseLimit: new Decimal(10).add(getBuyableAmount(this.layer, 22).mul(2))
         },
         12: {
             title: "Extension Potency",
@@ -171,7 +170,7 @@ addLayer("Celestial Particles", {
             purchaseLimit: new Decimal(10)
         },
         22: {
-            title: "Seperated Extensions",
+            title: "Seperator Extensions",
             cost(x) { return Decimal.floor(new Decimal(20000).mul((new Decimal(2).pow((x).pow(1.2)))))},
             display() { return "Increases the number of buyable cycle extensions. \nCosts: " + this.cost(getBuyableAmount(this.layer, this.id)) + ` \n You currently have ` + (getBuyableAmount(this.layer, 22).mul(2)) + ` extra buyable extensions` + ` \n Maximum: ` + this.purchaseLimit},
             canAfford() { return player[this.layer].points.gte(this.cost(getBuyableAmount(this.layer, this.id))) },
@@ -184,7 +183,7 @@ addLayer("Celestial Particles", {
             },
             unlocked() { return hasUpgrade('Celestial Particles', 23) },  
             purchaseLimit: new Decimal(10)
-        },
+        }
     },
     clickables: {
         11: {
