@@ -38,7 +38,7 @@ addLayer("Celestial Particles", {
                     return player[this.layer].points.add(new Decimal(1)).pow(new Decimal(0.333));
                 }
             },
-            effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
+            effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" } // Add formatting to the effect
         }, 
         12: {
             title: "Chain Reaction",
@@ -53,7 +53,7 @@ addLayer("Celestial Particles", {
             },
             effectDisplay() {
                 return format(upgradeEffect(this.layer, this.id))+"x";
-            }, // Add formatting to the effect
+            } // Add formatting to the effect
         },
         13: {
             title: "Extended Particle Cycles",
@@ -66,7 +66,7 @@ addLayer("Celestial Particles", {
             },
             effectDisplay() { 
                 return "Extra cycle extensions each add " + format(buyableEffect(this.layer, 11)) + "x multiplier" 
-            }, // Add formatting to the effect
+            } // Add formatting to the effect
         },
         14: {
             title: "Violent Reaction",
@@ -116,7 +116,7 @@ addLayer("Celestial Particles", {
         23: {
             title: "Larger Cycles",
             description: "A buyable that allows for more complex seperators which increase the amount of buyable particles. You get one for free :)",
-            cost: new Decimal(20000),
+            cost: new Decimal(40000),
             effect() {
                 if (getBuyableAmount(this.layer, 22).lte(new Decimal(0))) {
                     setBuyableAmount(this.layer, 22, new Decimal(1));
@@ -128,7 +128,7 @@ addLayer("Celestial Particles", {
         11: {
             title: "Cycle Extensions",
             cost(x) { return Decimal.floor(new Decimal(40).mul((new Decimal(2).pow((x).pow(1))))) },
-            display() { return "Add a Particle Cycle Extension. \nCosts: " + this.cost(getBuyableAmount(this.layer, this.id)) + ` \n You currently have ` + getBuyableAmount(this.layer, 11) + ` Cycle Extensions` + ` \n Maximum: ` + this.purchaseLimit},
+            display() { return "Add a Particle Cycle Extension. \nCosts: " + this.cost(getBuyableAmount(this.layer, this.id)) + ` \n You currently have ` + getBuyableAmount(this.layer, 11) + ` Cycle Extensions` + ` \n Maximum: ` + this.purchaseLimit()},
             canAfford() { return player[this.layer].points.gte(this.cost(getBuyableAmount(this.layer, this.id))) },
             buy() {
                 player[this.layer].points = player[this.layer].points.sub(this.cost(getBuyableAmount(this.layer, this.id)))
@@ -138,11 +138,11 @@ addLayer("Celestial Particles", {
                 return new Decimal(new Decimal(2).add(new Decimal(0.1).mul(getBuyableAmount(this.layer, 12)))).pow(getBuyableAmount(this.layer, this.id));
             },
             unlocked() { return hasUpgrade('Celestial Particles', 13) },  
-            purchaseLimit: new Decimal(10).add(getBuyableAmount(this.layer, 22).mul(2))
+            purchaseLimit(){ return new Decimal(10).add(getBuyableAmount(this.layer, 22).mul(2))}
         },
         12: {
             title: "Extension Potency",
-            cost(x) { return Decimal.floor(new Decimal(20000).mul((new Decimal(2).pow((x).pow(1.3))))) },
+            cost(x) { return Decimal.floor(new Decimal(20000).mul((new Decimal(2).pow((x).pow(1.25))))) },
             display() { return "Increase cycle extension potency. \nCosts: " + this.cost(getBuyableAmount(this.layer, this.id)) + ` \n Your extension potency level is level ` + getBuyableAmount(this.layer, 12) + ` \n Maximum: ` + this.purchaseLimit},
             canAfford() { return player[this.layer].points.gte(this.cost(getBuyableAmount(this.layer, this.id))) },
             buy() {
@@ -171,7 +171,7 @@ addLayer("Celestial Particles", {
         },
         22: {
             title: "Seperator Extensions",
-            cost(x) { return Decimal.floor(new Decimal(20000).mul((new Decimal(2).pow((x).pow(1.2)))))},
+            cost(x) { return Decimal.floor(new Decimal(40000).mul((new Decimal(2).pow((x).pow(1.25)))))},
             display() { return "Increases the number of buyable cycle extensions. \nCosts: " + this.cost(getBuyableAmount(this.layer, this.id)) + ` \n You currently have ` + (getBuyableAmount(this.layer, 22).mul(2)) + ` extra buyable extensions` + ` \n Maximum: ` + this.purchaseLimit},
             canAfford() { return player[this.layer].points.gte(this.cost(getBuyableAmount(this.layer, this.id))) },
             buy() {
