@@ -3,7 +3,7 @@ let modInfo = {
 	id: "apotheosis",
 	author: "Avatar Of Wrath and System Shark",
 	pointsName: "Celestial Essence",
-	modFiles: ["layers/particles.js", "tree.js"],
+	modFiles: ["layers/particles.js", "layers/matter.js", "tree.js"],
 
 	discordName: "", 
 	discordLink: "",

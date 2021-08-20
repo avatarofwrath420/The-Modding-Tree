@@ -18,6 +18,7 @@ addLayer("Celestial Particles", {
         mult.mul(new Decimal(2).pow(getBuyableAmount(this.layer, 21)));
         return mult;
     },
+    resetarray: ["upgrades", "buyables"],
     gainExp() { // Calculate the exponent on main currency from bonuses
         return new Decimal(1)
     },
@@ -25,6 +26,13 @@ addLayer("Celestial Particles", {
     hotkeys: [
         {key: "p", description: "P: Convert Celestial Particles into Celestial Essence", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
+    doReset(layer) {
+        if (layer === "Celestial Particles") {
+
+        } else {
+            layerDataReset(this.layer, this.resetarray);
+        }
+    },
     layerShown(){return true},
     upgrades: {
         11: {
@@ -57,15 +65,12 @@ addLayer("Celestial Particles", {
         },
         13: {
             title: "Extended Particle Cycles",
-            description: "Unlocks Particle Cycle Extenders. You get one for free :)",
+            description: "Unlocks Particle Cycle Extenders. These increase your celestial essence generation. You get one for free :)",
             cost: new Decimal(40),
             effect() {
                 if (getBuyableAmount(this.layer, 11).lte(new Decimal(0))) {
                     setBuyableAmount(this.layer, 11, new Decimal(1));
                 }
-            },
-            effectDisplay() { 
-                return "Extra cycle extensions each add " + format(buyableEffect(this.layer, 11)) + "x multiplier" 
             } // Add formatting to the effect
         },
         14: {
@@ -86,7 +91,7 @@ addLayer("Celestial Particles", {
         },
         16: {
             title: "Extended Essence Condensing",
-            description: "Unlocks Essense Condensation Extenders. You get one for free :)",
+            description: "Unlocks Essense Condensation Extenders. These increase the amount of celestial particles you gain. You get one for free :)",
             cost: new Decimal(2000),
             effect() {
                 if (getBuyableAmount(this.layer, 21).lte(new Decimal(0))) {
@@ -97,7 +102,7 @@ addLayer("Celestial Particles", {
         },
         21: {
             title: "Ackermannian Condensation",
-            description: "Improves the condensing rate of celestial essence to celestial particles",
+            description: "Improves the condensing rate of celestial essence to celestial particles. ",
             cost: new Decimal(3000),
             effect() {
                 this.layer.exponent = new Decimal(0.6);
@@ -128,14 +133,14 @@ addLayer("Celestial Particles", {
         11: {
             title: "Cycle Extensions",
             cost(x) { return Decimal.floor(new Decimal(40).mul((new Decimal(2).pow((x).pow(1))))) },
-            display() { return "Add a Particle Cycle Extension. \nCosts: " + this.cost(getBuyableAmount(this.layer, this.id)) + ` \n You currently have ` + getBuyableAmount(this.layer, 11) + ` Cycle Extensions` + ` \n Maximum: ` + this.purchaseLimit()},
+            display() { return "Add a Particle Cycle Extension. \nCosts: " + this.cost(getBuyableAmount(this.layer, this.id)) + ` \n You currently have ` + getBuyableAmount(this.layer, 11) + ` Cycle Extensions` + ` \n Maximum: ` + this.purchaseLimit() + "\nEach extension adds a x" + this.effect() + " multiplier to celestial essence gain. In total, your extensions add a x" + format(buyableEffect(this.layer, 11)) + " multiplier to celestial essence generation."},
             canAfford() { return player[this.layer].points.gte(this.cost(getBuyableAmount(this.layer, this.id))) },
             buy() {
                 player[this.layer].points = player[this.layer].points.sub(this.cost(getBuyableAmount(this.layer, this.id)))
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             effect() {
-                return new Decimal(new Decimal(2).add(new Decimal(0.1).mul(getBuyableAmount(this.layer, 12)))).pow(getBuyableAmount(this.layer, this.id));
+                return new Decimal(new Decimal(2).add(new Decimal(0.1).mul(getBuyableAmount(this.layer, 12)))).pow(getBuyableAmount(this.layer, this.id)).ceil();
             },
             unlocked() { return hasUpgrade('Celestial Particles', 13) },  
             purchaseLimit(){ return new Decimal(10).add(getBuyableAmount(this.layer, 22).mul(2))}
@@ -143,7 +148,7 @@ addLayer("Celestial Particles", {
         12: {
             title: "Extension Potency",
             cost(x) { return Decimal.floor(new Decimal(20000).mul((new Decimal(2).pow((x).pow(1.25))))) },
-            display() { return "Increase cycle extension potency. \nCosts: " + this.cost(getBuyableAmount(this.layer, this.id)) + ` \n Your extension potency level is level ` + getBuyableAmount(this.layer, 12) + ` \n Maximum: ` + this.purchaseLimit},
+            display() { return "Increase cycle extension potency by +0.1. \nCosts: " + this.cost(getBuyableAmount(this.layer, this.id)) + ` \n Your extension potency level is level ` + getBuyableAmount(this.layer, 12) + ` \n Maximum: ` + this.purchaseLimit},
             canAfford() { return player[this.layer].points.gte(this.cost(getBuyableAmount(this.layer, this.id))) },
             buy() {
                 player[this.layer].points = player[this.layer].points.sub(this.cost(getBuyableAmount(this.layer, this.id)))
@@ -157,14 +162,14 @@ addLayer("Celestial Particles", {
         21: {
             title: "Essence Condenser",
             cost(x) { return Decimal.floor(new Decimal(2000).mul((new Decimal(2).pow((x).pow(1.25))))) },
-            display() { return "Add a Celestial Essence Condenser. \nCosts: " + this.cost(getBuyableAmount(this.layer, this.id)) + ` \n You currently have ` + getBuyableAmount(this.layer, 21) + ` Essence Condensers` + ` \n Maximum: ` + this.purchaseLimit},
+            display() { return "Add a Celestial Essence Condenser. \nCosts: " + this.cost(getBuyableAmount(this.layer, this.id)) + ` \n You currently have ` + getBuyableAmount(this.layer, 21) + ` Essence Condensers` + ` \n Maximum: ` + this.purchaseLimit + "\nEach extension adds a x" + this.effect() + " multiplier to celestial essence gain. In total, your extensions add a x" + format(buyableEffect(this.layer, 21)) + " multiplier to celestial particle gain."},
             canAfford() { return player[this.layer].points.gte(this.cost(getBuyableAmount(this.layer, this.id))) },
             buy() {
                 player[this.layer].points = player[this.layer].points.sub(this.cost(getBuyableAmount(this.layer, this.id)))
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             effect() {
-
+                return new Decimal(2).pow(getBuyableAmount(this.layer, 21)).ceil();
             },
             unlocked() { return hasUpgrade('Celestial Particles', 16) },  
             purchaseLimit: new Decimal(10)
@@ -172,7 +177,8 @@ addLayer("Celestial Particles", {
         22: {
             title: "Seperator Extensions",
             cost(x) { return Decimal.floor(new Decimal(40000).mul((new Decimal(2).pow((x).pow(1.25)))))},
-            display() { return "Increases the number of buyable cycle extensions. \nCosts: " + this.cost(getBuyableAmount(this.layer, this.id)) + ` \n You currently have ` + (getBuyableAmount(this.layer, 22).mul(2)) + ` extra buyable extensions` + ` \n Maximum: ` + this.purchaseLimit},
+            total() { new Decimal(getBuyableAmount(this.layer, 22).mul(2))},
+            display() { return "Increases the number of buyable cycle extensions. \nCosts: " + this.cost(getBuyableAmount(this.layer, this.id)) + ` \n You currently have ` + (getBuyableAmount(this.layer, 22).mul(2)) + ` extra buyable extensions` + ` \n Maximum: ` + this.purchaseLimit + "\n These seperators in total give you " + format(this.total()) + " extra buyable Cycle Extensions."},
             canAfford() { return player[this.layer].points.gte(this.cost(getBuyableAmount(this.layer, this.id))) },
             buy() {
                 player[this.layer].points = player[this.layer].points.sub(this.cost(getBuyableAmount(this.layer, this.id)))
@@ -195,6 +201,7 @@ addLayer("Celestial Particles", {
                 return true;
             }
         }
+    },
+    milestones: {
     }
-    
 });
