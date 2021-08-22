@@ -8,7 +8,7 @@ addLayer("Matter", {
 		points: new Decimal(0),
     }},
     color: "#e41bac",
-    requires: new Decimal(10), // Can be a function that takes requirement increases into account
+    requires: new Decimal(100), // Can be a function that takes requirement increases into account
     resource: "Metric Tons of Matter", // Name of prestige currency
     baseResource: "Celestial Particles", // Name of resource prestige is based on
     baseAmount() {return player["Celestial Particles"].points}, // Get the current amount of baseResource
@@ -30,7 +30,20 @@ addLayer("Matter", {
 
     }, 
     buyables: {
-
+        11: {
+            title: "Cycle Extensions",
+            cost(x) { return Decimal.floor(new Decimal(40).mul((new Decimal(2).pow((x).pow(1))))) },
+            display() { return "Add a Particle Cycle Extension. \nCosts: " + this.cost(getBuyableAmount(this.layer, this.id)) + ` \n You currently have ` + getBuyableAmount(this.layer, 11) + ` Cycle Extensions` + ` \n Maximum: ` + this.purchaseLimit() + "\nEach extension adds a x" + this.effect() + " multiplier to celestial essence gain. In total, your extensions add a x" + format(buyableEffect(this.layer, 11)) + " multiplier to celestial essence generation."},
+            canAfford() { return player[this.layer].points.gte(this.cost(getBuyableAmount(this.layer, this.id))) },
+            buy() {
+                player[this.layer].points = player[this.layer].points.sub(this.cost(getBuyableAmount(this.layer, this.id)))
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            effect() {
+                return new Decimal(new Decimal(2).add(new Decimal(0.1).mul(getBuyableAmount(this.layer, 12)))).pow(getBuyableAmount(this.layer, this.id)).ceil();
+            },
+            purchaseLimit(){ return new Decimal(10)}
+        }
     },
     clickables: {
 
